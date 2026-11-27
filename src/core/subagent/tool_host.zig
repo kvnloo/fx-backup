@@ -7542,6 +7542,7 @@ fn waitInSettleGap(gap: *GapFixture) ![]u8 {
     };
     var waiting = GapWait{ .runtime = gap.runtime, .worker = &gap.worker };
     try waiting.startBlocked(&gap.trace);
+    io_mod.sleep(50 * std.time.ns_per_ms);
     SettleGap.go.set(io_mod.getIo());
     return waiting.finish();
 }
