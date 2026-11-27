@@ -120,7 +120,8 @@ pub fn build(b: *std.Build) void {
     // a library extern in a static executable that is not. `install-test`
     // does not install fx, so the build links only the tests. Run it from the
     // repository root after `zig build` with the same prefix.
-    const pgso_tests = b.addTest(.{ .root_module = exe.root_module });
+    const test_filters = b.option([]const []const u8, "test-filter", "Build only the unit tests whose names contain this text (install-test only)") orelse &.{};
+    const pgso_tests = b.addTest(.{ .root_module = exe.root_module, .filters = test_filters });
     pgso_tests.pie = true;
     const install_pgso_tests = b.addInstallArtifact(pgso_tests, .{ .dest_sub_path = "fx-test" });
     b.step("install-test", "Install the unit test executable without running it").dependOn(&install_pgso_tests.step);
